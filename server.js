@@ -8,10 +8,10 @@ const io = new Server(server);
 
 app.use(express.static('public'));
 
-let players = {}; // Menyimpan ID pemain
+let players = { white: null, black: null };
 
 io.on('connection', (socket) => {
-    // Tentukan peran pemain (Putih jika pertama, Hitam jika kedua)
+    // Berikan peran ke pemain yang baru datang
     if (!players.white) {
         players.white = socket.id;
         socket.emit('playerRole', 'w');
@@ -19,7 +19,7 @@ io.on('connection', (socket) => {
         players.black = socket.id;
         socket.emit('playerRole', 'b');
     } else {
-        socket.emit('playerRole', 'observer'); // Pemain ke-3 dan seterusnya hanya melihat
+        socket.emit('playerRole', 'observer');
     }
 
     socket.on('langkah', (data) => {
@@ -34,5 +34,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server aktif di port ${PORT}`);
 });
